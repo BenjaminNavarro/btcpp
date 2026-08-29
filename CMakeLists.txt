@@ -8,6 +8,7 @@ project(
     VERSION 0.1.0
 )
 
+find_package(Catch2 3.15 REQUIRED)
 
 add_subdirectory(libs)
 add_subdirectory(tests)
