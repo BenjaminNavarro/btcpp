@@ -9,15 +9,19 @@ import :execution_node;
 
 export namespace btcpp {
 
+template <typename F>
+concept callable_action = std::is_invocable_r_v<State, F>;
+
 class GenericAction : public Action {
 public:
-    GenericAction(std::function<State()> action)
-        : GenericAction{std::move(action), nullptr} {
+    template <callable_action T>
+    GenericAction(T&& action)
+        : GenericAction{std::forward<T>(action), nullptr} {
     }
 
-    GenericAction(std::function<State()> action, Node* parent)
-        : Action{parent}, action_{std::move(action)} {
-        assert(action);
+    template <callable_action T>
+    GenericAction(T&& action, Node* parent)
+        : Action{parent}, action_{std::forward<T>(action)} {
     }
 
     [[nodiscard]] State tick() final {
