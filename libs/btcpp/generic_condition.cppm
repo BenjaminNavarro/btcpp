@@ -23,7 +23,7 @@ public:
     template <callable_condition T>
     GenericCondition(T&& condition, Node* parent) : Condition{parent} {
         if constexpr (std::is_invocable_r_v<bool, T>) {
-            condition_ = [condition] {
+            condition_ = [condition] mutable {
                 if (condition()) {
                     return State::Success;
                 } else {
