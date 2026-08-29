@@ -3,6 +3,16 @@
 import btcpp;
 
 TEST_CASE("GenericCondition") {
+    SECTION("Construction") {
+        auto seq = btcpp::Sequence{};
+        auto root = btcpp::GenericCondition([] { return true; });
+        auto with_parent =
+            btcpp::GenericCondition([] { return btcpp::failure; }, &seq);
+
+        REQUIRE(root.parent() == nullptr);
+        REQUIRE(with_parent.parent() == &seq);
+    }
+
     SECTION("Basic usage") {
         int value{};
 
