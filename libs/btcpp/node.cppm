@@ -6,6 +6,10 @@ export namespace btcpp {
 
 enum class State : std::uint8_t { Success, Failure, Running };
 
+constexpr State success = State::Success;
+constexpr State failure = State::Failure;
+constexpr State running = State::Running;
+
 class Node {
 public:
     Node() = default;
