@@ -7,7 +7,7 @@ function(add_btcpp_test name)
         target_sources(
             ${name}_test
             PRIVATE
-                ${name}.cpp
+                tests/${name}.cpp
         )
 
         set_target_properties(
@@ -32,3 +32,4 @@ function(add_btcpp_test name)
 endfunction(add_btcpp_test)
 
 add_btcpp_test(conditions)
+add_btcpp_test(actions)

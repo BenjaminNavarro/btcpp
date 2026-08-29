@@ -11,5 +11,8 @@ project(
 find_package(Catch2 3.15 REQUIRED)
 
 add_subdirectory(libs)
-add_subdirectory(tests)
 add_subdirectory(apps)
+
+# use include() to define tests at the top level and be able to run them
+# simply with ctest --preset conan-xxx
+include(tests/CMakeLists.txt)
