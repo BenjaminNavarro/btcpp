@@ -12,6 +12,8 @@ int main() {
         }
     }};
 
+    auto is_odd = btcpp::GenericCondition{[] { return std::rand() % 2 != 0; }};
+
     auto root = btcpp::Sequence{};
     auto fallback = btcpp::Fallback{&root};
     auto sequence = btcpp::Sequence{};

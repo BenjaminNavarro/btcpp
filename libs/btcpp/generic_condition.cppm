@@ -10,7 +10,8 @@ import :execution_node;
 export namespace btcpp {
 
 template <typename F>
-concept callable_condition = std::is_invocable_r_v<State, F>;
+concept callable_condition =
+    std::is_invocable_r_v<State, F> or std::is_invocable_r_v<bool, F>;
 
 class GenericCondition : public Condition {
 public:
@@ -20,8 +21,18 @@ public:
     }
 
     template <callable_condition T>
-    GenericCondition(T&& condition, Node* parent)
-        : Condition{parent}, condition_{std::forward<T>(condition)} {
+    GenericCondition(T&& condition, Node* parent) : Condition{parent} {
+        if constexpr (std::is_invocable_r_v<bool, T>) {
+            condition_ = [condition] {
+                if (condition()) {
+                    return State::Success;
+                } else {
+                    return State::Failure;
+                }
+            };
+        } else {
+            condition_ = condition;
+        }
     }
 
     [[nodiscard]] State tick() final {
