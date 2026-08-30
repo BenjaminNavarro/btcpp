@@ -33,3 +33,4 @@ endfunction(add_btcpp_test)
 
 add_btcpp_test(conditions)
 add_btcpp_test(actions)
+add_btcpp_test(control_nodes)
