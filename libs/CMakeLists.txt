@@ -12,6 +12,7 @@ target_sources(
         btcpp/control_node.cppm
         btcpp/sequence.cppm
         btcpp/fallback.cppm
+        btcpp/parallel.cppm
 
         btcpp/execution_node.cppm
         btcpp/generic_action.cppm

@@ -11,5 +11,6 @@ export import :generic_condition;
 export import :control_node;
 export import :sequence;
 export import :fallback;
+export import :parallel;
 
 export import :fmt;
