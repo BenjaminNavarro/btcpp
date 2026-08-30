@@ -24,7 +24,7 @@ public:
     }
 
 private:
-    std::vector<Node*> children_{nullptr};
+    std::vector<Node*> children_;
 };
 
 } // namespace btcpp
