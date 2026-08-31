@@ -3,6 +3,7 @@ export module btcpp;
 
 // Include all partitions inside the btcpp module
 export import :node;
+export import :decorators;
 
 export import :execution_node;
 export import :generic_action;

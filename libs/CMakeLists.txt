@@ -8,6 +8,7 @@ target_sources(
     FILES
         btcpp/btcpp.cppm
         btcpp/node.cppm
+        btcpp/decorators.cppm
 
         btcpp/control_node.cppm
         btcpp/sequence.cppm
