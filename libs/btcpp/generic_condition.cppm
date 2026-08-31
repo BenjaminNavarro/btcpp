@@ -16,12 +16,7 @@ concept callable_condition =
 class GenericCondition : public Condition {
 public:
     template <callable_condition T>
-    GenericCondition(T&& condition)
-        : GenericCondition{std::forward<T>(condition), nullptr} {
-    }
-
-    template <callable_condition T>
-    GenericCondition(T&& condition, Node* parent) : Condition{parent} {
+    GenericCondition(T&& condition) {
         if constexpr (std::is_invocable_r_v<bool, T>) {
             condition_ = [condition] mutable {
                 if (condition()) {

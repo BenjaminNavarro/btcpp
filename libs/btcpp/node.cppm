@@ -14,9 +14,6 @@ class Node {
 public:
     Node() = default;
 
-    Node(Node* parent) : parent_{parent} {
-    }
-
     Node(const Node&) = delete;
 
     virtual ~Node() noexcept = default;

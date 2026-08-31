@@ -15,13 +15,7 @@ concept callable_action = std::is_invocable_r_v<State, F>;
 class GenericAction : public Action {
 public:
     template <callable_action T>
-    GenericAction(T&& action)
-        : GenericAction{std::forward<T>(action), nullptr} {
-    }
-
-    template <callable_action T>
-    GenericAction(T&& action, Node* parent)
-        : Action{parent}, action_{std::forward<T>(action)} {
+    GenericAction(T&& action) : action_{std::forward<T>(action)} {
     }
 
     [[nodiscard]] State tick() final {
