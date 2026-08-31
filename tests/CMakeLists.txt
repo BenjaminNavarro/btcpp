@@ -1,5 +1,34 @@
 include(CTest)
 
+add_library(test_utils)
+
+target_sources(
+    test_utils
+    PUBLIC
+    FILE_SET CXX_MODULES
+    FILES
+        tests/test_utils.cppm
+)
+
+set_target_properties(
+    test_utils
+    PROPERTIES
+        CXX_STANDARD 23
+        CXX_STANDARD_REQUIRED YES
+        CXX_MODULE_STD YES
+)
+
+target_link_libraries(
+    test_utils
+    PUBLIC
+        btcpp::btcpp
+)
+
+target_compile_features(
+    test_utils
+    PRIVATE   cxx_std_23
+    INTERFACE cxx_std_20)
+
 function(add_btcpp_test name)
     if (BUILD_TESTING)
         add_executable(${name}_test)
@@ -22,6 +51,7 @@ function(add_btcpp_test name)
             PRIVATE
                 btcpp::btcpp
                 Catch2::Catch2WithMain
+                test_utils
         )
 
         add_test(

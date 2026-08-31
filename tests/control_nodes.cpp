@@ -1,35 +1,14 @@
 #include <catch2/catch_test_macros.hpp>
 
 import btcpp;
-
-template <btcpp::State S>
-class ActionResult final : public btcpp::ExecutionNode {
-public:
-    using btcpp::ExecutionNode::ExecutionNode;
-
-    [[nodiscard]] btcpp::State tick() final {
-        ticked_ = true;
-        return S;
-    }
-
-    [[nodiscard]] bool ticked() const {
-        return ticked_;
-    }
-
-private:
-    bool ticked_{};
-};
-
-using SuccessAction = ActionResult<btcpp::success>;
-using FailureAction = ActionResult<btcpp::failure>;
-using RunningAction = ActionResult<btcpp::running>;
+import test_utils;
 
 TEST_CASE("Sequence") {
 
     SECTION("All success") {
-        auto node1 = SuccessAction{};
-        auto node2 = SuccessAction{};
-        auto node3 = SuccessAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::SuccessAction{};
+        auto node3 = testing::SuccessAction{};
 
         auto sequence = btcpp::Sequence{};
         sequence.add_child(&node1);
@@ -43,9 +22,9 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("One failure") {
-        auto node1 = SuccessAction{};
-        auto node2 = FailureAction{};
-        auto node3 = SuccessAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::FailureAction{};
+        auto node3 = testing::SuccessAction{};
 
         auto sequence = btcpp::Sequence{};
         sequence.add_child(&node1);
@@ -59,9 +38,9 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("All failures") {
-        auto node1 = FailureAction{};
-        auto node2 = FailureAction{};
-        auto node3 = FailureAction{};
+        auto node1 = testing::FailureAction{};
+        auto node2 = testing::FailureAction{};
+        auto node3 = testing::FailureAction{};
 
         auto sequence = btcpp::Sequence{};
         sequence.add_child(&node1);
@@ -75,9 +54,9 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("All running") {
-        auto node1 = RunningAction{};
-        auto node2 = RunningAction{};
-        auto node3 = RunningAction{};
+        auto node1 = testing::RunningAction{};
+        auto node2 = testing::RunningAction{};
+        auto node3 = testing::RunningAction{};
 
         auto sequence = btcpp::Sequence{};
         sequence.add_child(&node1);
@@ -91,9 +70,9 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("Mixed success / running") {
-        auto node1 = SuccessAction{};
-        auto node2 = RunningAction{};
-        auto node3 = SuccessAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::RunningAction{};
+        auto node3 = testing::SuccessAction{};
 
         auto sequence = btcpp::Sequence{};
         sequence.add_child(&node1);
@@ -110,9 +89,9 @@ TEST_CASE("Sequence") {
 TEST_CASE("Fallback") {
 
     SECTION("All success") {
-        auto node1 = SuccessAction{};
-        auto node2 = SuccessAction{};
-        auto node3 = SuccessAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::SuccessAction{};
+        auto node3 = testing::SuccessAction{};
 
         auto fallback = btcpp::Fallback{};
         fallback.add_child(&node1);
@@ -126,9 +105,9 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("One failure") {
-        auto node1 = SuccessAction{};
-        auto node2 = SuccessAction{};
-        auto node3 = FailureAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::SuccessAction{};
+        auto node3 = testing::FailureAction{};
 
         auto fallback = btcpp::Fallback{};
         fallback.add_child(&node1);
@@ -142,9 +121,9 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("All failure") {
-        auto node1 = FailureAction{};
-        auto node2 = FailureAction{};
-        auto node3 = FailureAction{};
+        auto node1 = testing::FailureAction{};
+        auto node2 = testing::FailureAction{};
+        auto node3 = testing::FailureAction{};
 
         auto fallback = btcpp::Fallback{};
         fallback.add_child(&node1);
@@ -158,9 +137,9 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("All running") {
-        auto node1 = RunningAction{};
-        auto node2 = RunningAction{};
-        auto node3 = RunningAction{};
+        auto node1 = testing::RunningAction{};
+        auto node2 = testing::RunningAction{};
+        auto node3 = testing::RunningAction{};
 
         auto fallback = btcpp::Fallback{};
         fallback.add_child(&node1);
@@ -174,9 +153,9 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("Mixed success / running") {
-        auto node1 = SuccessAction{};
-        auto node2 = RunningAction{};
-        auto node3 = SuccessAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::RunningAction{};
+        auto node3 = testing::SuccessAction{};
 
         auto fallback = btcpp::Fallback{};
         fallback.add_child(&node1);
@@ -193,9 +172,9 @@ TEST_CASE("Fallback") {
 TEST_CASE("Parallel") {
 
     SECTION("Sucess rate") {
-        auto node1 = SuccessAction{};
-        auto node2 = SuccessAction{};
-        auto node3 = SuccessAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::SuccessAction{};
+        auto node3 = testing::SuccessAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
@@ -213,9 +192,9 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("All success") {
-        auto node1 = SuccessAction{};
-        auto node2 = SuccessAction{};
-        auto node3 = SuccessAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::SuccessAction{};
+        auto node3 = testing::SuccessAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
@@ -229,9 +208,9 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("Some success") {
-        auto node1 = SuccessAction{};
-        auto node2 = SuccessAction{};
-        auto node3 = RunningAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::SuccessAction{};
+        auto node3 = testing::RunningAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
@@ -257,9 +236,9 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("One success") {
-        auto node1 = SuccessAction{};
-        auto node2 = FailureAction{};
-        auto node3 = FailureAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::FailureAction{};
+        auto node3 = testing::FailureAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
@@ -285,9 +264,9 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("All failure") {
-        auto node1 = FailureAction{};
-        auto node2 = FailureAction{};
-        auto node3 = FailureAction{};
+        auto node1 = testing::FailureAction{};
+        auto node2 = testing::FailureAction{};
+        auto node3 = testing::FailureAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
@@ -301,9 +280,9 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("All running") {
-        auto node1 = RunningAction{};
-        auto node2 = RunningAction{};
-        auto node3 = RunningAction{};
+        auto node1 = testing::RunningAction{};
+        auto node2 = testing::RunningAction{};
+        auto node3 = testing::RunningAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
@@ -317,9 +296,9 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("One running") {
-        auto node1 = RunningAction{};
-        auto node2 = FailureAction{};
-        auto node3 = FailureAction{};
+        auto node1 = testing::RunningAction{};
+        auto node2 = testing::FailureAction{};
+        auto node3 = testing::FailureAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
@@ -339,9 +318,9 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("Mixed success / running / failure") {
-        auto node1 = SuccessAction{};
-        auto node2 = RunningAction{};
-        auto node3 = FailureAction{};
+        auto node1 = testing::SuccessAction{};
+        auto node2 = testing::RunningAction{};
+        auto node3 = testing::FailureAction{};
 
         auto parallel = btcpp::Parallel{};
         parallel.add_child(&node1);
