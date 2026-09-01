@@ -5,25 +5,10 @@ import :node;
 
 export namespace btcpp {
 
-class ExecutionNode : public Node {
-public:
-    using Node::Node;
+class ExecutionNode : public LeafNode {};
 
-private:
-};
+class Action : public ExecutionNode {};
 
-class Action : public ExecutionNode {
-public:
-    using ExecutionNode::ExecutionNode;
-
-private:
-};
-
-class Condition : public ExecutionNode {
-public:
-    using ExecutionNode::ExecutionNode;
-
-private:
-};
+class Condition : public ExecutionNode {};
 
 } // namespace btcpp

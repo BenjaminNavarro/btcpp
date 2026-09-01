@@ -5,10 +5,14 @@ import :node;
 
 export namespace btcpp {
 
-class Decorator : public Node {
+class Decorator : public InternalNode {
 public:
-    Decorator(Node* child) {
-        set_child(child);
+    Decorator() : InternalNode(1) {
+    }
+
+    template <a_node T>
+    Decorator(T&& child) : InternalNode(1) {
+        add_child<T>(std::forward<T>(child));
     }
 
     Decorator(const Decorator&) = delete;
@@ -19,21 +23,11 @@ public:
     Decorator& operator=(Decorator&&) noexcept = default;
 
     [[nodiscard]] const Node* child() const {
-        return child_;
+        return children().front().get();
     }
 
     [[nodiscard]] Node* child() {
-        return child_;
-    }
-
-private:
-    Node* child_;
-
-    void set_child(Node* child) {
-        if (child == nullptr) {
-            throw std::logic_error{"[Decorator] child cannot be nullptr"};
-        }
-        child_ = child;
+        return children().front().get();
     }
 };
 
@@ -55,7 +49,12 @@ public:
 
 class Retry final : public Decorator {
 public:
-    Retry(Node* child, int retries) : Decorator{child}, retries_{retries} {
+    Retry(int retries) : retries_{retries} {
+    }
+
+    template <a_node T>
+    Retry(T&& child, int retries)
+        : Decorator{std::forward<T>(child)}, retries_{retries} {
     }
 
     [[nodiscard]] int retries() const {

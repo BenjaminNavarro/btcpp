@@ -7,11 +7,9 @@ export namespace btcpp {
 
 class Sequence final : public ControlNode {
 public:
-    using ControlNode::ControlNode;
-
     [[nodiscard]] State tick() final {
-        for (auto* child : children()) {
-            if (child == nullptr) {
+        for (const auto& child : children()) {
+            if (not child) {
                 continue;
             }
 

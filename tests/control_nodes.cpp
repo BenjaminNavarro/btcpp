@@ -4,16 +4,11 @@ import btcpp;
 import test_utils;
 
 TEST_CASE("Sequence") {
-
     SECTION("All success") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::SuccessAction{};
-        auto node3 = testing::SuccessAction{};
-
         auto sequence = btcpp::Sequence{};
-        sequence.add_child(&node1);
-        sequence.add_child(&node2);
-        sequence.add_child(&node3);
+        auto& node1 = sequence.add_child<testing::SuccessAction>();
+        auto& node2 = sequence.add_child<testing::SuccessAction>();
+        auto& node3 = sequence.add_child<testing::SuccessAction>();
 
         REQUIRE(sequence.tick() == btcpp::success);
         REQUIRE(node1.ticked());
@@ -22,14 +17,10 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("One failure") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::FailureAction{};
-        auto node3 = testing::SuccessAction{};
-
         auto sequence = btcpp::Sequence{};
-        sequence.add_child(&node1);
-        sequence.add_child(&node2);
-        sequence.add_child(&node3);
+        auto& node1 = sequence.add_child<testing::SuccessAction>();
+        auto& node2 = sequence.add_child<testing::FailureAction>();
+        auto& node3 = sequence.add_child<testing::SuccessAction>();
 
         REQUIRE(sequence.tick() == btcpp::failure);
         REQUIRE(node1.ticked());
@@ -38,14 +29,11 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("All failures") {
-        auto node1 = testing::FailureAction{};
-        auto node2 = testing::FailureAction{};
-        auto node3 = testing::FailureAction{};
 
         auto sequence = btcpp::Sequence{};
-        sequence.add_child(&node1);
-        sequence.add_child(&node2);
-        sequence.add_child(&node3);
+        auto& node1 = sequence.add_child<testing::FailureAction>();
+        auto& node2 = sequence.add_child<testing::FailureAction>();
+        auto& node3 = sequence.add_child<testing::FailureAction>();
 
         REQUIRE(sequence.tick() == btcpp::failure);
         REQUIRE(node1.ticked());
@@ -54,14 +42,10 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("All running") {
-        auto node1 = testing::RunningAction{};
-        auto node2 = testing::RunningAction{};
-        auto node3 = testing::RunningAction{};
-
         auto sequence = btcpp::Sequence{};
-        sequence.add_child(&node1);
-        sequence.add_child(&node2);
-        sequence.add_child(&node3);
+        auto& node1 = sequence.add_child<testing::RunningAction>();
+        auto& node2 = sequence.add_child<testing::RunningAction>();
+        auto& node3 = sequence.add_child<testing::RunningAction>();
 
         REQUIRE(sequence.tick() == btcpp::running);
         REQUIRE(node1.ticked());
@@ -70,14 +54,10 @@ TEST_CASE("Sequence") {
     }
 
     SECTION("Mixed success / running") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::RunningAction{};
-        auto node3 = testing::SuccessAction{};
-
         auto sequence = btcpp::Sequence{};
-        sequence.add_child(&node1);
-        sequence.add_child(&node2);
-        sequence.add_child(&node3);
+        auto& node1 = sequence.add_child<testing::SuccessAction>();
+        auto& node2 = sequence.add_child<testing::RunningAction>();
+        auto& node3 = sequence.add_child<testing::SuccessAction>();
 
         REQUIRE(sequence.tick() == btcpp::running);
         REQUIRE(node1.ticked());
@@ -89,14 +69,10 @@ TEST_CASE("Sequence") {
 TEST_CASE("Fallback") {
 
     SECTION("All success") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::SuccessAction{};
-        auto node3 = testing::SuccessAction{};
-
         auto fallback = btcpp::Fallback{};
-        fallback.add_child(&node1);
-        fallback.add_child(&node2);
-        fallback.add_child(&node3);
+        auto& node1 = fallback.add_child<testing::SuccessAction>();
+        auto& node2 = fallback.add_child<testing::SuccessAction>();
+        auto& node3 = fallback.add_child<testing::SuccessAction>();
 
         REQUIRE(fallback.tick() == btcpp::success);
         REQUIRE(node1.ticked());
@@ -105,14 +81,10 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("One failure") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::SuccessAction{};
-        auto node3 = testing::FailureAction{};
-
         auto fallback = btcpp::Fallback{};
-        fallback.add_child(&node1);
-        fallback.add_child(&node2);
-        fallback.add_child(&node3);
+        auto& node1 = fallback.add_child<testing::SuccessAction>();
+        auto& node2 = fallback.add_child<testing::SuccessAction>();
+        auto& node3 = fallback.add_child<testing::FailureAction>();
 
         REQUIRE(fallback.tick() == btcpp::success);
         REQUIRE(node1.ticked());
@@ -121,14 +93,10 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("All failure") {
-        auto node1 = testing::FailureAction{};
-        auto node2 = testing::FailureAction{};
-        auto node3 = testing::FailureAction{};
-
         auto fallback = btcpp::Fallback{};
-        fallback.add_child(&node1);
-        fallback.add_child(&node2);
-        fallback.add_child(&node3);
+        auto& node1 = fallback.add_child<testing::FailureAction>();
+        auto& node2 = fallback.add_child<testing::FailureAction>();
+        auto& node3 = fallback.add_child<testing::FailureAction>();
 
         REQUIRE(fallback.tick() == btcpp::failure);
         REQUIRE(node1.ticked());
@@ -137,14 +105,10 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("All running") {
-        auto node1 = testing::RunningAction{};
-        auto node2 = testing::RunningAction{};
-        auto node3 = testing::RunningAction{};
-
         auto fallback = btcpp::Fallback{};
-        fallback.add_child(&node1);
-        fallback.add_child(&node2);
-        fallback.add_child(&node3);
+        auto& node1 = fallback.add_child<testing::RunningAction>();
+        auto& node2 = fallback.add_child<testing::RunningAction>();
+        auto& node3 = fallback.add_child<testing::RunningAction>();
 
         REQUIRE(fallback.tick() == btcpp::running);
         REQUIRE(node1.ticked());
@@ -153,14 +117,10 @@ TEST_CASE("Fallback") {
     }
 
     SECTION("Mixed success / running") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::RunningAction{};
-        auto node3 = testing::SuccessAction{};
-
         auto fallback = btcpp::Fallback{};
-        fallback.add_child(&node1);
-        fallback.add_child(&node2);
-        fallback.add_child(&node3);
+        auto& node1 = fallback.add_child<testing::SuccessAction>();
+        auto& node2 = fallback.add_child<testing::RunningAction>();
+        auto& node3 = fallback.add_child<testing::SuccessAction>();
 
         REQUIRE(fallback.tick() == btcpp::success);
         REQUIRE(node1.ticked());
@@ -172,14 +132,10 @@ TEST_CASE("Fallback") {
 TEST_CASE("Parallel") {
 
     SECTION("Sucess rate") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::SuccessAction{};
-        auto node3 = testing::SuccessAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::SuccessAction>();
+        auto& node2 = parallel.add_child<testing::SuccessAction>();
+        auto& node3 = parallel.add_child<testing::SuccessAction>();
 
         REQUIRE(parallel.success_threshold() == 1);
         for (int i = 1; i <= parallel.children().size(); ++i) {
@@ -192,14 +148,10 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("All success") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::SuccessAction{};
-        auto node3 = testing::SuccessAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::SuccessAction>();
+        auto& node2 = parallel.add_child<testing::SuccessAction>();
+        auto& node3 = parallel.add_child<testing::SuccessAction>();
 
         REQUIRE(parallel.tick() == btcpp::success);
         REQUIRE(node1.ticked());
@@ -208,14 +160,10 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("Some success") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::SuccessAction{};
-        auto node3 = testing::RunningAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::SuccessAction>();
+        auto& node2 = parallel.add_child<testing::SuccessAction>();
+        auto& node3 = parallel.add_child<testing::RunningAction>();
 
         REQUIRE(parallel.tick() == btcpp::success);
         REQUIRE(node1.ticked());
@@ -236,14 +184,10 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("One success") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::FailureAction{};
-        auto node3 = testing::FailureAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::SuccessAction>();
+        auto& node2 = parallel.add_child<testing::FailureAction>();
+        auto& node3 = parallel.add_child<testing::FailureAction>();
 
         REQUIRE(parallel.tick() == btcpp::success);
         REQUIRE(node1.ticked());
@@ -264,14 +208,10 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("All failure") {
-        auto node1 = testing::FailureAction{};
-        auto node2 = testing::FailureAction{};
-        auto node3 = testing::FailureAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::FailureAction>();
+        auto& node2 = parallel.add_child<testing::FailureAction>();
+        auto& node3 = parallel.add_child<testing::FailureAction>();
 
         REQUIRE(parallel.tick() == btcpp::failure);
         REQUIRE(node1.ticked());
@@ -280,14 +220,10 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("All running") {
-        auto node1 = testing::RunningAction{};
-        auto node2 = testing::RunningAction{};
-        auto node3 = testing::RunningAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::RunningAction>();
+        auto& node2 = parallel.add_child<testing::RunningAction>();
+        auto& node3 = parallel.add_child<testing::RunningAction>();
 
         REQUIRE(parallel.tick() == btcpp::running);
         REQUIRE(node1.ticked());
@@ -296,14 +232,10 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("One running") {
-        auto node1 = testing::RunningAction{};
-        auto node2 = testing::FailureAction{};
-        auto node3 = testing::FailureAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::RunningAction>();
+        auto& node2 = parallel.add_child<testing::FailureAction>();
+        auto& node3 = parallel.add_child<testing::FailureAction>();
 
         REQUIRE(parallel.tick() == btcpp::running);
         REQUIRE(node1.ticked());
@@ -318,14 +250,10 @@ TEST_CASE("Parallel") {
     }
 
     SECTION("Mixed success / running / failure") {
-        auto node1 = testing::SuccessAction{};
-        auto node2 = testing::RunningAction{};
-        auto node3 = testing::FailureAction{};
-
         auto parallel = btcpp::Parallel{};
-        parallel.add_child(&node1);
-        parallel.add_child(&node2);
-        parallel.add_child(&node3);
+        auto& node1 = parallel.add_child<testing::SuccessAction>();
+        auto& node2 = parallel.add_child<testing::RunningAction>();
+        auto& node3 = parallel.add_child<testing::FailureAction>();
 
         REQUIRE(parallel.tick() == btcpp::success);
         REQUIRE(node1.ticked());

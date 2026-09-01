@@ -17,18 +17,18 @@ public:
         }
     }
 
+    [[nodiscard]] int failures() const {
+        return failures_;
+    }
+
 private:
     int failures_;
 };
 
 TEST_CASE("Invert") {
-    auto node1 = testing::SuccessAction{};
-    auto node2 = testing::RunningAction{};
-    auto node3 = testing::FailureAction{};
-
-    auto node1_inv = btcpp::Invert{&node1};
-    auto node2_inv = btcpp::Invert{&node2};
-    auto node3_inv = btcpp::Invert{&node3};
+    auto node1_inv = btcpp::Invert{testing::SuccessAction{}};
+    auto node2_inv = btcpp::Invert{testing::RunningAction{}};
+    auto node3_inv = btcpp::Invert{testing::FailureAction{}};
 
     REQUIRE(node1_inv.tick() == btcpp::failure);
     REQUIRE(node2_inv.tick() == btcpp::running);
@@ -38,13 +38,17 @@ TEST_CASE("Invert") {
 TEST_CASE("Retry") {
     SECTION("RetryableAction") {
         auto action = RetryableAction{2};
+        REQUIRE(action.failures() == 2);
         REQUIRE(action.tick() == btcpp::failure);
+        REQUIRE(action.failures() == 1);
         REQUIRE(action.tick() == btcpp::failure);
+        REQUIRE(action.failures() == 0);
         REQUIRE(action.tick() == btcpp::success);
+        REQUIRE(action.failures() == 0);
     }
+
     SECTION("Enough retries") {
-        auto action = RetryableAction{2};
-        auto retry = btcpp::Retry{&action, 3};
+        auto retry = btcpp::Retry{RetryableAction{2}, 3};
 
         REQUIRE(retry.failures_count() == 0);
         REQUIRE(retry.retries() == 3);
@@ -55,19 +59,25 @@ TEST_CASE("Retry") {
         REQUIRE(retry.tick() == btcpp::success);
         REQUIRE(retry.failures_count() == 0);
     }
+
     SECTION("Not enough retries") {
-        auto action = RetryableAction{3};
-        auto retry = btcpp::Retry{&action, 2};
+        auto retry = btcpp::Retry{2};
+        auto& action = retry.add_child<RetryableAction>(3);
 
         REQUIRE(retry.failures_count() == 0);
         REQUIRE(retry.retries() == 2);
+        REQUIRE(action.failures() == 3);
         REQUIRE(retry.tick() == btcpp::running);
         REQUIRE(retry.failures_count() == 1);
+        REQUIRE(action.failures() == 2);
         REQUIRE(retry.tick() == btcpp::running);
         REQUIRE(retry.failures_count() == 2);
+        REQUIRE(action.failures() == 1);
         REQUIRE(retry.tick() == btcpp::failure);
         REQUIRE(retry.failures_count() == 3);
+        REQUIRE(action.failures() == 0);
         REQUIRE(retry.tick() == btcpp::success);
         REQUIRE(retry.failures_count() == 0);
+        REQUIRE(action.failures() == 0);
     }
 }

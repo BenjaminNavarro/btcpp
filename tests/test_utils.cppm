@@ -7,7 +7,14 @@ export namespace testing {
 template <btcpp::State S>
 class ActionResult final : public btcpp::ExecutionNode {
 public:
-    using btcpp::ExecutionNode::ExecutionNode;
+    ActionResult() = default;
+    ActionResult(const ActionResult&) = delete;
+    ActionResult(ActionResult&&) noexcept = default;
+
+    virtual ~ActionResult() noexcept = default;
+
+    ActionResult& operator=(const ActionResult&) = delete;
+    ActionResult& operator=(ActionResult&&) noexcept = default;
 
     [[nodiscard]] btcpp::State tick() final {
         ticked_ = true;

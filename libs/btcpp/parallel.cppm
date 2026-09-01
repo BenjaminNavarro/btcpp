@@ -7,8 +7,6 @@ export namespace btcpp {
 
 class Parallel final : public ControlNode {
 public:
-    using ControlNode::ControlNode;
-
     void set_success_threshold(int threshold) {
         if (threshold < 1) {
             throw std::logic_error{std::format(
@@ -33,8 +31,8 @@ public:
     [[nodiscard]] State tick() final {
         int successes{0};
         int failures{0};
-        for (auto* child : children()) {
-            if (child == nullptr) {
+        for (const auto& child : children()) {
+            if (not child) {
                 continue;
             }
 
