@@ -19,6 +19,8 @@ target_sources(
         btcpp/generic_action.cppm
         btcpp/generic_condition.cppm
 
+        btcpp/io.cppm
+        btcpp/demangle.cppm
         btcpp/fmt.cppm
 )
 
@@ -34,3 +36,8 @@ target_compile_features(
     btcpp
     PRIVATE   cxx_std_23
     INTERFACE cxx_std_20)
+
+target_link_libraries(
+    btcpp
+    PRIVATE pugixml::pugixml
+)

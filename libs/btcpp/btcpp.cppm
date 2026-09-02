@@ -14,4 +14,6 @@ export import :sequence;
 export import :fallback;
 export import :parallel;
 
+export import :io;
+
 export import :fmt;

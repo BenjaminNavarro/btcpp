@@ -55,6 +55,8 @@ int main() {
         });
     }
 
+    std::println("Generated XML:\n{}", btcpp::to_xml(tree));
+
     int cycle{0};
     do {
         std::println("Ticking the BT (cycle = {})", cycle);
@@ -64,4 +66,6 @@ int main() {
         }
         ++cycle;
     } while (tree.tick() != btcpp::success);
+
+    std::println("Generated XML:\n{}", btcpp::to_xml(tree));
 }
