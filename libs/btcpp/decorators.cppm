@@ -35,7 +35,8 @@ class Invert final : public Decorator {
 public:
     using Decorator::Decorator;
 
-    [[nodiscard]] State tick() final {
+private:
+    [[nodiscard]] State do_tick() final {
         switch (child()->tick()) {
         case success:
             return failure;
@@ -69,7 +70,8 @@ public:
         failures_count_ = 0;
     }
 
-    [[nodiscard]] State tick() final {
+private:
+    [[nodiscard]] State do_tick() final {
         switch (child()->tick()) {
         case success:
             reset();
@@ -86,7 +88,6 @@ public:
         }
     }
 
-private:
     int retries_;
     int failures_count_{};
 };

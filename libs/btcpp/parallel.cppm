@@ -28,7 +28,8 @@ public:
         return success_threshold_;
     }
 
-    [[nodiscard]] State tick() final {
+private:
+    [[nodiscard]] State do_tick() final {
         int successes{0};
         int failures{0};
         for (const auto& child : children()) {
@@ -57,7 +58,6 @@ public:
         }
     }
 
-private:
     int success_threshold_{1};
 };
 

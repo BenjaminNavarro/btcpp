@@ -6,8 +6,8 @@ import :control_node;
 export namespace btcpp {
 
 class Sequence final : public ControlNode {
-public:
-    [[nodiscard]] State tick() final {
+private:
+    [[nodiscard]] State do_tick() final {
         for (const auto& child : children()) {
             if (not child) {
                 continue;
@@ -25,8 +25,6 @@ public:
 
         return State::Success;
     }
-
-private:
 };
 
 } // namespace btcpp

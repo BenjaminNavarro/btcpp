@@ -8,7 +8,12 @@ public:
     RetryableAction(int failures) : failures_{failures} {
     }
 
-    [[nodiscard]] btcpp::State tick() final {
+    [[nodiscard]] int failures() const {
+        return failures_;
+    }
+
+private:
+    [[nodiscard]] btcpp::State do_tick() final {
         if (failures_ > 0) {
             --failures_;
             return btcpp::failure;
@@ -17,11 +22,6 @@ public:
         }
     }
 
-    [[nodiscard]] int failures() const {
-        return failures_;
-    }
-
-private:
     int failures_;
 };
 

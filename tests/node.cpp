@@ -9,7 +9,8 @@ public:
     TestInternalNode() : btcpp::InternalNode(N) {
     }
 
-    [[nodiscard]] btcpp::State tick() final {
+private:
+    [[nodiscard]] btcpp::State do_tick() final {
         return btcpp::success;
     }
 };

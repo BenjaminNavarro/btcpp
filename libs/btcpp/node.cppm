@@ -34,7 +34,13 @@ public:
         return state_;
     }
 
-    [[nodiscard]] virtual State tick() = 0;
+    [[nodiscard]] State tick() {
+        state_ = do_tick();
+        return state_;
+    }
+
+protected:
+    [[nodiscard]] virtual State do_tick() = 0;
 
 private:
     Node* parent_{nullptr};

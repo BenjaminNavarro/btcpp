@@ -18,11 +18,11 @@ public:
     GenericAction(T&& action) : action_{std::forward<T>(action)} {
     }
 
-    [[nodiscard]] State tick() final {
+private:
+    [[nodiscard]] State do_tick() final {
         return action_();
     }
 
-private:
     std::function<State()> action_;
 };
 

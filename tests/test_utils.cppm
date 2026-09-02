@@ -16,16 +16,16 @@ public:
     ActionResult& operator=(const ActionResult&) = delete;
     ActionResult& operator=(ActionResult&&) noexcept = default;
 
-    [[nodiscard]] btcpp::State tick() final {
-        ticked_ = true;
-        return S;
-    }
-
     [[nodiscard]] bool ticked() const {
         return ticked_;
     }
 
 private:
+    [[nodiscard]] btcpp::State do_tick() final {
+        ticked_ = true;
+        return S;
+    }
+
     bool ticked_{};
 };
 

@@ -30,7 +30,8 @@ public:
         }
     }
 
-    [[nodiscard]] State tick() final {
+private:
+    [[nodiscard]] State do_tick() final {
         const auto state = condition_();
         if (state == State::Running) {
             throw std::logic_error(
@@ -39,7 +40,6 @@ public:
         return state;
     }
 
-private:
     std::function<State()> condition_;
 };
 
