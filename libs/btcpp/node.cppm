@@ -22,14 +22,6 @@ public:
     Node& operator=(const Node&) = delete;
     Node& operator=(Node&&) noexcept = default;
 
-    [[nodiscard]] const Node* parent() const {
-        return parent_;
-    }
-
-    void set_parent(Node* parent) {
-        parent_ = parent;
-    }
-
     [[nodiscard]] State state() const {
         return state_;
     }
@@ -43,7 +35,6 @@ protected:
     [[nodiscard]] virtual State do_tick() = 0;
 
 private:
-    Node* parent_{nullptr};
     State state_{State::Success};
 };
 
