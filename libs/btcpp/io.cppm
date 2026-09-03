@@ -22,8 +22,8 @@ std::string to_xml(const Node& node) {
     pugi::xml_node root = doc.append_child("BehaviorTree");
 
     // Recursive function to serialize nodes
-    std::function<void(const Node&, pugi::xml_node&)> serialize_node;
-    serialize_node = [&](const Node& node, pugi::xml_node& xml_node) {
+    auto serialize_node = [&](this auto& self, const Node& node,
+                              pugi::xml_node& xml_node) -> void {
         // Create an XML node for the current behavior tree node
         pugi::xml_node child_xml_node = xml_node.append_child("Node");
         child_xml_node.append_attribute("type") = demangle(typeid(node).name());
@@ -34,7 +34,7 @@ std::string to_xml(const Node& node) {
         if (const auto* internal_node =
                 dynamic_cast<const InternalNode*>(&node)) {
             for (const auto& child : internal_node->children()) {
-                serialize_node(*child, child_xml_node);
+                self(*child, child_xml_node);
             }
         }
     };
@@ -46,6 +46,46 @@ std::string to_xml(const Node& node) {
     std::ostringstream oss;
     doc.save(oss);
     return oss.str();
+}
+
+struct NodeData {
+    std::string type;
+    State state;
+    std::vector<int> children;
+};
+
+std::map<int, NodeData> parse_xml(const std::string& xml_string) {
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_string(xml_string.c_str());
+
+    if (!result) {
+        throw std::runtime_error(
+            std::format("XML parsing error: {}", result.description()));
+    }
+
+    std::map<int, NodeData> node_map;
+    int current_id{};
+
+    // Recursive function to parse nodes
+    auto parse_node = [&](this auto& self,
+                          const pugi::xml_node& xml_node) -> void {
+        const auto node_id = current_id;
+        auto& node_data = node_map[node_id];
+        node_data.type = xml_node.attribute("type").as_string();
+        node_data.state = from_string(xml_node.attribute("state").as_string());
+
+        for (const auto& child_xml_node : xml_node.children("Node")) {
+            ++current_id;
+            node_data.children.push_back(current_id);
+            self(child_xml_node);
+        }
+    };
+
+    // Start parsing from the root node
+    pugi::xml_node root = doc.child("BehaviorTree");
+    parse_node(root.child("Node"));
+
+    return node_map;
 }
 
 } // namespace btcpp
