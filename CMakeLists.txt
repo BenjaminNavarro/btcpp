@@ -8,8 +8,12 @@ project(
     VERSION 0.1.0
 )
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 find_package(Catch2 3.15 REQUIRED)
 find_package(pugixml 1.16 REQUIRED)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_subdirectory(libs)
 add_subdirectory(apps)
