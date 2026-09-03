@@ -5,5 +5,5 @@
 import std;
 import btcpp;
 
-std::map<int, QPointF>
+std::map<int, QPoint>
 graph_layout(const std::map<int, btcpp::NodeData>& bt_data);
