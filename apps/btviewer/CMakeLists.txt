@@ -1,23 +1,23 @@
-add_executable(btgui)
+add_executable(btviewer)
 
 target_sources(
-    btgui
+    btviewer
     PRIVATE
         main.cpp
-        graph_layout.cpp
 )
 
 set_target_properties(
-    btgui
+    btviewer
     PROPERTIES
         CXX_STANDARD 23
         CXX_STANDARD_REQUIRED YES
 )
 
 target_link_libraries(
-    btgui
+    btviewer
     PRIVATE
         btcpp::btcpp
+        btgui::btgui
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets

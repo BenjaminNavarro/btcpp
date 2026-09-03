@@ -57,7 +57,9 @@ struct NodeData {
     std::vector<int> children;
 };
 
-std::map<int, NodeData> parse_xml(const std::string& xml_string) {
+using GraphData = std::vector<NodeData>;
+
+GraphData parse_xml(const std::string& xml_string) {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_string(xml_string.c_str());
 
@@ -66,14 +68,35 @@ std::map<int, NodeData> parse_xml(const std::string& xml_string) {
             std::format("XML parsing error: {}", result.description()));
     }
 
-    std::map<int, NodeData> node_map;
-    int current_id{};
+    // Start parsing from the root node
+    pugi::xml_node root = doc.child("BehaviorTree");
 
+    GraphData node_vec;
+
+    // Count nodes to resize the node vector before using it
+    const int node_count = [&] {
+        int count{1};
+        auto count_node = [&](this auto& self,
+                              const pugi::xml_node& xml_node) -> void {
+            for (const auto& child_xml_node : xml_node.children("Node")) {
+                ++count;
+                self(child_xml_node);
+            }
+        };
+
+        count_node(root.child("Node"));
+
+        return count;
+    }();
+
+    node_vec.resize(node_count);
+
+    int current_id{};
     // Recursive function to parse nodes
     auto parse_node = [&](this auto& self,
                           const pugi::xml_node& xml_node) -> void {
         const auto node_id = current_id;
-        auto& node_data = node_map[node_id];
+        auto& node_data = node_vec[node_id];
         node_data.type = xml_node.attribute("type").as_string();
         node_data.state = from_string(xml_node.attribute("state").as_string());
         node_data.name = xml_node.attribute("name").as_string();
@@ -85,11 +108,9 @@ std::map<int, NodeData> parse_xml(const std::string& xml_string) {
         }
     };
 
-    // Start parsing from the root node
-    pugi::xml_node root = doc.child("BehaviorTree");
     parse_node(root.child("Node"));
 
-    return node_map;
+    return node_vec;
 }
 
 } // namespace btcpp

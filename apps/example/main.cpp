@@ -88,8 +88,8 @@ int main() {
     std::println("Generated XML:\n{}", btcpp::to_xml(tree));
 
     const auto bt_data = btcpp::parse_xml(btcpp::to_xml(tree));
-    for (const auto& [id, node_data] : bt_data) {
-        std::println("Node ID: {}, Type: {}, State: {}, Children: {}", id,
+    for (int id = 0; const auto& node_data : bt_data) {
+        std::println("Node ID: {}, Type: {}, State: {}, Children: {}", id++,
                      node_data.type, node_data.state, node_data.children);
     }
 }
