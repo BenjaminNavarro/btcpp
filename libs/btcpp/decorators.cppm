@@ -7,14 +7,6 @@ export namespace btcpp {
 
 class Decorator : public InternalNode {
 public:
-    Decorator() : InternalNode(1) {
-    }
-
-    template <a_node T>
-    Decorator(T&& child) : InternalNode(1) {
-        add_child<T>(std::forward<T>(child));
-    }
-
     Decorator(const Decorator&) = delete;
 
     virtual ~Decorator() noexcept = default;
@@ -29,11 +21,21 @@ public:
     [[nodiscard]] Node* child() {
         return children().front().get();
     }
+
+protected:
+    Decorator(std::string_view name) : InternalNode{1, name} {
+    }
+
+    template <a_node T>
+    Decorator(T&& child, std::string_view name) : InternalNode{1, name} {
+        add_child<T>(std::forward<T>(child));
+    }
 };
 
 class Invert final : public Decorator {
 public:
-    using Decorator::Decorator;
+    Invert(std::string_view name = {}) : Decorator{name} {
+    }
 
 private:
     [[nodiscard]] State do_tick() final {
@@ -50,12 +52,13 @@ private:
 
 class Retry final : public Decorator {
 public:
-    Retry(int retries) : retries_{retries} {
+    Retry(int retries, std::string_view name = {})
+        : Decorator{name}, retries_{retries} {
     }
 
     template <a_node T>
-    Retry(T&& child, int retries)
-        : Decorator{std::forward<T>(child)}, retries_{retries} {
+    Retry(T&& child, int retries, std::string_view name = {})
+        : Decorator{std::forward<T>(child), name}, retries_{retries} {
     }
 
     [[nodiscard]] int retries() const {

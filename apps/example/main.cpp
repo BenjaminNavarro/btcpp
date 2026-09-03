@@ -14,45 +14,63 @@ int main() {
     auto tree = btcpp::Fallback{};
 
     {
-        auto& open_and_pass = tree.add_child<btcpp::Sequence>();
-        auto& open_if = open_and_pass.add_child<btcpp::Fallback>();
-        open_and_pass.add_child<btcpp::GenericAction>([] {
-            std::println("Passing 1st door");
-            return btcpp::success;
-        });
+        auto& open_and_pass =
+            tree.add_child<btcpp::Sequence>("open and pass 1st door");
+        auto& open_if =
+            open_and_pass.add_child<btcpp::Fallback>("open 1st door if");
+        open_and_pass.add_child<btcpp::GenericAction>(
+            [] {
+                std::println("Passing 1st door");
+                return btcpp::success;
+            },
+            "pass 1st door");
 
-        open_if.add_child<btcpp::GenericCondition>([&] {
-            std::println("1st door is {}", door_state_str(first_door_state));
-            return first_door_state;
-        });
+        open_if.add_child<btcpp::GenericCondition>(
+            [&] {
+                std::println("1st door is {}",
+                             door_state_str(first_door_state));
+                return first_door_state;
+            },
+            "1st door opened");
 
-        open_if.add_child<btcpp::GenericAction>([] {
-            std::println("Impossible to open 1st door");
-            return btcpp::failure;
-        });
+        open_if.add_child<btcpp::GenericAction>(
+            [] {
+                std::println("Impossible to open 1st door");
+                return btcpp::failure;
+            },
+            "open 1st door");
     }
 
     {
-        auto& open_and_pass = tree.add_child<btcpp::Sequence>();
-        auto& open_if = open_and_pass.add_child<btcpp::Fallback>();
-        open_and_pass.add_child<btcpp::GenericAction>([] {
-            std::println("Passing 2nd door");
-            return btcpp::success;
-        });
+        auto& open_and_pass =
+            tree.add_child<btcpp::Sequence>("open and pass 2nd door");
+        auto& open_if =
+            open_and_pass.add_child<btcpp::Fallback>("open 2nd door if");
+        open_and_pass.add_child<btcpp::GenericAction>(
+            [] {
+                std::println("Passing 2nd door");
+                return btcpp::success;
+            },
+            "pass 2nd door");
 
-        open_if.add_child<btcpp::GenericCondition>([&] {
-            std::println("2nd door is {}", door_state_str(second_door_state));
-            return second_door_state;
-        });
+        open_if.add_child<btcpp::GenericCondition>(
+            [&] {
+                std::println("2nd door is {}",
+                             door_state_str(second_door_state));
+                return second_door_state;
+            },
+            "2nd door opened");
 
-        open_if.add_child<btcpp::GenericAction>([&, tries = 0] mutable {
-            ++tries;
-            if (tries >= 2) {
-                second_door_state = true;
-            }
-            std::println("Trying to open the 2nd door (try = {})", tries);
-            return btcpp::running;
-        });
+        open_if.add_child<btcpp::GenericAction>(
+            [&, tries = 0] mutable {
+                ++tries;
+                if (tries >= 2) {
+                    second_door_state = true;
+                }
+                std::println("Trying to open the 2nd door (try = {})", tries);
+                return btcpp::running;
+            },
+            "open 2nd door");
     }
 
     std::println("Generated XML:\n{}", btcpp::to_xml(tree));

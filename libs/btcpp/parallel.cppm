@@ -7,6 +7,9 @@ export namespace btcpp {
 
 class Parallel final : public ControlNode {
 public:
+    Parallel(std::string_view name = {}) : ControlNode{name} {
+    }
+
     void set_success_threshold(int threshold) {
         if (threshold < 1) {
             throw std::logic_error{std::format(

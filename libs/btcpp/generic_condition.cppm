@@ -13,10 +13,11 @@ template <typename F>
 concept callable_condition =
     std::is_invocable_r_v<State, F> or std::is_invocable_r_v<bool, F>;
 
-class GenericCondition : public Condition {
+class GenericCondition final : public Condition {
 public:
     template <callable_condition T>
-    GenericCondition(T&& condition) {
+    GenericCondition(T&& condition, std::string_view name = {})
+        : Condition{name} {
         if constexpr (std::is_invocable_r_v<bool, T>) {
             condition_ = [condition] mutable {
                 if (condition()) {

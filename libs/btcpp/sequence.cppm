@@ -6,6 +6,10 @@ import :control_node;
 export namespace btcpp {
 
 class Sequence final : public ControlNode {
+public:
+    Sequence(std::string_view name = {}) : ControlNode{name} {
+    }
+
 private:
     [[nodiscard]] State do_tick() final {
         for (const auto& child : children()) {

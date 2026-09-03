@@ -25,7 +25,8 @@ State from_string(std::string_view state_str) {
 
 class Node {
 public:
-    Node() = default;
+    Node(std::string_view name) : name_{name} {
+    }
 
     Node(const Node&) = delete;
     Node(Node&&) noexcept = default;
@@ -39,6 +40,10 @@ public:
         return state_;
     }
 
+    [[nodiscard]] std::string_view name() const {
+        return name_;
+    }
+
     [[nodiscard]] State tick() {
         state_ = do_tick();
         return state_;
@@ -49,9 +54,13 @@ protected:
 
 private:
     State state_{State::Success};
+    std::string name_;
 };
 
-class LeafNode : public Node {};
+class LeafNode : public Node {
+protected:
+    using Node::Node;
+};
 
 template <typename T>
 concept a_node = std::is_base_of_v<Node, std::remove_cvref_t<T>>;
@@ -89,10 +98,11 @@ public:
     }
 
 protected:
-    InternalNode() = default;
+    InternalNode(std::string_view name = {}) : Node{name} {
+    }
 
-    InternalNode(int max_children_count)
-        : max_children_count_{max_children_count} {
+    InternalNode(int max_children_count, std::string_view name = {})
+        : Node{name}, max_children_count_{max_children_count} {
         if (max_children_count_ < 0) {
             throw std::logic_error{
                 std::format("Maximum number of children ({}) can't be negative",

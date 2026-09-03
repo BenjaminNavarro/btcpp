@@ -5,6 +5,9 @@ import :node;
 
 export namespace btcpp {
 
-class ControlNode : public InternalNode {};
+class ControlNode : public InternalNode {
+protected:
+    using InternalNode::InternalNode;
+};
 
 } // namespace btcpp

@@ -29,6 +29,8 @@ std::string to_xml(const Node& node) {
         child_xml_node.append_attribute("type") = demangle(typeid(node).name());
         child_xml_node.append_attribute("state") =
             std::format("{}", node.state());
+        child_xml_node.append_attribute("name") =
+            std::format("{}", node.name());
 
         // Serialize children if it's an internal node
         if (const auto* internal_node =
@@ -51,6 +53,7 @@ std::string to_xml(const Node& node) {
 struct NodeData {
     std::string type;
     State state;
+    std::string name;
     std::vector<int> children;
 };
 
@@ -73,6 +76,7 @@ std::map<int, NodeData> parse_xml(const std::string& xml_string) {
         auto& node_data = node_map[node_id];
         node_data.type = xml_node.attribute("type").as_string();
         node_data.state = from_string(xml_node.attribute("state").as_string());
+        node_data.name = xml_node.attribute("name").as_string();
 
         for (const auto& child_xml_node : xml_node.children("Node")) {
             ++current_id;

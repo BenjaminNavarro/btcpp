@@ -5,10 +5,19 @@ import :node;
 
 export namespace btcpp {
 
-class ExecutionNode : public LeafNode {};
+class ExecutionNode : public LeafNode {
+protected:
+    using LeafNode::LeafNode;
+};
 
-class Action : public ExecutionNode {};
+class Action : public ExecutionNode {
+protected:
+    using ExecutionNode::ExecutionNode;
+};
 
-class Condition : public ExecutionNode {};
+class Condition : public ExecutionNode {
+protected:
+    using ExecutionNode::ExecutionNode;
+};
 
 } // namespace btcpp
