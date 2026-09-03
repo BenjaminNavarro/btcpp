@@ -10,6 +10,19 @@ constexpr State success = State::Success;
 constexpr State failure = State::Failure;
 constexpr State running = State::Running;
 
+State from_string(std::string_view state_str) {
+    if (state_str == "success") {
+        return success;
+    } else if (state_str == "failure") {
+        return failure;
+    } else if (state_str == "running") {
+        return running;
+    } else {
+        throw std::invalid_argument{
+            std::format("Invalid state string: {}", state_str)};
+    }
+}
+
 class Node {
 public:
     Node() = default;
