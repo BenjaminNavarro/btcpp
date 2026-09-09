@@ -8,14 +8,22 @@ import std;
 import :node;
 import :fmt;
 import :demangle;
+import :node_data;
 
 export namespace btcpp {
+
+enum class XMLFormat { Formatted, Unformatted };
+
+constexpr XMLFormat formatted = XMLFormat::Formatted;
+constexpr XMLFormat unformatted = XMLFormat::Unformatted;
 
 //! \brief Serialize a behavior tree starting at the given node to XML format.
 //!
 //! \param node Root node of the tree
+//! \param formatted [true] Whether to format the XML representation or leave it
+//! raw
 //! \return std::string XML representation of the tree
-std::string to_xml(const Node& node) {
+std::string to_xml(const Node& node, XMLFormat format = formatted) {
     pugi::xml_document doc;
 
     // Create a root node in the XML document
@@ -46,22 +54,18 @@ std::string to_xml(const Node& node) {
 
     // Convert the XML document to a string
     std::ostringstream oss;
-    doc.save(oss);
+    if (format == formatted) {
+        doc.save(oss);
+    } else {
+        doc.save(oss, "\t", pugi::format_raw);
+    }
     return oss.str();
 }
 
-struct NodeData {
-    std::string type;
-    State state;
-    std::string name;
-    std::vector<int> children;
-};
-
-using GraphData = std::vector<NodeData>;
-
-GraphData parse_xml(const std::string& xml_string) {
+GraphData parse_xml(std::string_view xml_string) {
     pugi::xml_document doc;
-    pugi::xml_parse_result result = doc.load_string(xml_string.c_str());
+    pugi::xml_parse_result result =
+        doc.load_buffer(xml_string.data(), xml_string.size());
 
     if (!result) {
         throw std::runtime_error(

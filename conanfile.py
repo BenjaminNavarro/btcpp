@@ -9,6 +9,7 @@ class ExampleRecipe(ConanFile):
     def requirements(self):
         self.requires("catch2/3.15.3")
         self.requires("pugixml/1.16")
+        self.requires("cppzmq/4.11.0")
 
     def layout(self):
         cmake_layout(self)

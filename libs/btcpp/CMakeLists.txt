@@ -19,6 +19,7 @@ target_sources(
         generic_action.cppm
         generic_condition.cppm
 
+        node_data.cppm
         io.cppm
         demangle.cppm
         fmt.cppm

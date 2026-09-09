@@ -1,6 +1,7 @@
 export module btcpp:fmt;
 
 import :node;
+import :node_data;
 import std;
 
 template <>
@@ -22,5 +23,22 @@ struct std::formatter<btcpp::State> {
             return std::format_to(context.out(), "running");
             break;
         }
+    }
+};
+
+template <>
+struct std::formatter<btcpp::NodeData> {
+    static constexpr auto parse(std::format_parse_context& context) {
+        return context.begin();
+    }
+
+    static auto format(const btcpp::NodeData& data,
+                       std::format_context& context) {
+        auto out = std::format_to(context.out(), "{} @ {} - {}", data.name,
+                                  data.type, data.state);
+        if (not data.children.empty()) {
+            return std::format_to(context.out(), " {}", data.children);
+        }
+        return out;
     }
 };
