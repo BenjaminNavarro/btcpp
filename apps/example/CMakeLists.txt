@@ -19,3 +19,5 @@ target_link_libraries(
         btcpp::btcpp
         btnet::btnet
 )
+
+add_sanitizers(example)

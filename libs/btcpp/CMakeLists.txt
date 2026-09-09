@@ -42,3 +42,5 @@ target_link_libraries(
     btcpp
     PRIVATE pugixml::pugixml
 )
+
+add_sanitizers(btcpp)

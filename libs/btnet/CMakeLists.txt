@@ -29,3 +29,5 @@ target_link_libraries(
     PRIVATE
         cppzmq
 )
+
+add_sanitizers(btnet)

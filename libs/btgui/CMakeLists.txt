@@ -33,3 +33,5 @@ target_link_libraries(
         Qt6::Gui
         Qt6::Widgets
 )
+
+add_sanitizers(btgui)

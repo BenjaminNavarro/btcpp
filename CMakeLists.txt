@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 
 set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/deps/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
 
 project(
     btcpp
@@ -15,6 +16,7 @@ find_package(Catch2 3.15 REQUIRED)
 find_package(pugixml 1.16 REQUIRED)
 find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(cppzmq REQUIRED)
+find_package(Sanitizers)
 
 add_subdirectory(libs)
 add_subdirectory(apps)
