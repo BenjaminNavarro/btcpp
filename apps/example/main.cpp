@@ -1,5 +1,6 @@
 import std;
 import btcpp;
+import btnet;
 
 int main() {
     std::srand(std::time(nullptr));
@@ -73,6 +74,11 @@ int main() {
             "open 2nd door");
     }
 
+    auto bt_pub = btnet::BTPublisher{};
+
+    const auto bytes_sent = bt_pub.send_graph_sync(tree);
+    std::println("{} bytes sent", bytes_sent);
+
     std::println("Generated XML:\n{}", btcpp::to_xml(tree));
 
     int cycle{0};
@@ -83,13 +89,9 @@ int main() {
             std::exit(1);
         }
         ++cycle;
+        bt_pub.send_state(tree);
+        std::this_thread::sleep_for(std::chrono::seconds{1});
     } while (tree.tick() != btcpp::success);
 
-    std::println("Generated XML:\n{}", btcpp::to_xml(tree));
-
-    const auto bt_data = btcpp::parse_xml(btcpp::to_xml(tree));
-    for (int id = 0; const auto& node_data : bt_data) {
-        std::println("Node ID: {}, Type: {}, State: {}, Children: {}", id++,
-                     node_data.type, node_data.state, node_data.children);
-    }
+    bt_pub.send_state(tree);
 }

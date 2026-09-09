@@ -18,6 +18,7 @@ target_link_libraries(
     PRIVATE
         btcpp::btcpp
         btgui::btgui
+        btnet::btnet
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets

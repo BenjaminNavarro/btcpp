@@ -18,16 +18,10 @@ using namespace std::literals;
 
 export namespace btgui {
 
-class BTGui {
+class BTGui : public QObject {
+    Q_OBJECT
 public:
     BTGui(NodeStyle style = {}) : style_{style} {
-    }
-
-    void set_graph(btcpp::GraphData data) {
-        data_ = std::move(data);
-        node_widgets_.clear();
-        node_widgets_.resize(data_.size());
-        draw_graph();
     }
 
     void set_node_style(NodeStyle style) {
@@ -35,12 +29,27 @@ public:
         draw_graph();
     }
 
-    void update_graph_state(const btcpp::GraphData& data) {
-        // TODO
-    }
-
     QGraphicsScene* scene() {
         return &scene_;
+    }
+
+public slots:
+    void set_graph(btcpp::GraphData data) {
+        data_ = std::move(data);
+        node_widgets_.clear();
+        node_widgets_.resize(data_.size());
+        draw_graph();
+    }
+
+    void update_graph_state(const btcpp::GraphData& data) {
+        if (data_.size() != data.size()) {
+            std::println("Can't update graph: node count mismatch");
+            return;
+        }
+        for (int id = 0; id < data.size(); ++id) {
+            data_[id].state = data[id].state;
+            update_node_state(id);
+        }
     }
 
 private:
@@ -156,3 +165,5 @@ private:
 };
 
 } // namespace btgui
+
+#include "graph_gui.moc"

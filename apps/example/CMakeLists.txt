@@ -15,5 +15,7 @@ set_target_properties(
 
 target_link_libraries(
     example
-    PRIVATE btcpp::btcpp
+    PRIVATE
+        btcpp::btcpp
+        btnet::btnet
 )
