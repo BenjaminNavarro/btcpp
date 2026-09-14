@@ -146,7 +146,7 @@ private:
         // remove possible module name at the end
         type = type.substr(0, type.rfind('@'));
 
-        return QString::fromStdString(std::format("[{} {}]", id, type));
+        return QString("[%1 %2]").arg(id).arg(type);
     }
 
     static QPointF to_qpointf(const auto& pos) {
