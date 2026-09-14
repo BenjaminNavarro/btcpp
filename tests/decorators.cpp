@@ -5,7 +5,7 @@ import test_utils;
 
 class RetryableAction final : public btcpp::Action {
 public:
-    RetryableAction(int failures) : failures_{failures} {
+    RetryableAction(int failures) : Action{"retry"}, failures_{failures} {
     }
 
     [[nodiscard]] int failures() const {
@@ -26,9 +26,9 @@ private:
 };
 
 TEST_CASE("Invert") {
-    auto node1_inv = btcpp::Invert{testing::SuccessAction{}};
-    auto node2_inv = btcpp::Invert{testing::RunningAction{}};
-    auto node3_inv = btcpp::Invert{testing::FailureAction{}};
+    auto node1_inv = btcpp::Invert{testing::SuccessAction{"node1"}};
+    auto node2_inv = btcpp::Invert{testing::RunningAction{"node2"}};
+    auto node3_inv = btcpp::Invert{testing::FailureAction{"node3"}};
 
     REQUIRE(node1_inv.tick() == btcpp::failure);
     REQUIRE(node2_inv.tick() == btcpp::running);
@@ -61,7 +61,7 @@ TEST_CASE("Retry") {
     }
 
     SECTION("Not enough retries") {
-        auto retry = btcpp::Retry{2};
+        auto retry = btcpp::Retry{2, "retryer"};
         auto& action = retry.add_child<RetryableAction>(3);
 
         REQUIRE(retry.failures_count() == 0);

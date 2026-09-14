@@ -33,9 +33,11 @@ TEST_CASE("InternalNode") {
     SECTION("Add child") {
         auto node = TestInternalNode<2>{};
 
-        auto& success_action = node.add_child<testing::SuccessAction>();
-        auto& failure_action = node.add_child<testing::FailureAction>();
-        REQUIRE_THROWS_AS(node.add_child<testing::SuccessAction>(),
+        auto& success_action =
+            node.add_child<testing::SuccessAction>("success");
+        auto& failure_action =
+            node.add_child<testing::FailureAction>("failure");
+        REQUIRE_THROWS_AS(node.add_child<testing::SuccessAction>("success"),
                           std::logic_error);
 
         STATIC_REQUIRE(
@@ -47,15 +49,17 @@ TEST_CASE("InternalNode") {
     SECTION("Add children") {
         auto node = TestInternalNode<2>{};
         {
-            auto& children = node.add_children(testing::SuccessAction{},
-                                               testing::FailureAction{});
+            auto& children =
+                node.add_children(testing::SuccessAction{"success"},
+                                  testing::FailureAction{"failure"});
             REQUIRE(children.size() == 2);
         }
         {
-            REQUIRE_THROWS_AS(node.add_children(testing::SuccessAction{},
-                                                testing::FailureAction{},
-                                                testing::RunningAction{}),
-                              std::logic_error);
+            REQUIRE_THROWS_AS(
+                node.add_children(testing::SuccessAction{"success"},
+                                  testing::FailureAction{"failure"},
+                                  testing::RunningAction{"running"}),
+                std::logic_error);
         }
     }
 }

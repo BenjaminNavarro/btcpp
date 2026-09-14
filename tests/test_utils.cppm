@@ -7,7 +7,8 @@ export namespace testing {
 template <btcpp::State S>
 class ActionResult final : public btcpp::ExecutionNode {
 public:
-    ActionResult() = default;
+    using ExecutionNode::ExecutionNode;
+
     ActionResult(const ActionResult&) = delete;
     ActionResult(ActionResult&&) noexcept = default;
 
