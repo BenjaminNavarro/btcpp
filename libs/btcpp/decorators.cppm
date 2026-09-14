@@ -37,6 +37,17 @@ public:
     Invert(std::string_view name = {}) : Decorator{name} {
     }
 
+    template <a_node T>
+    Invert(T&& child)
+        : Decorator{std::forward<T>(child),
+                    std::format("{} invert", child.name())} {
+    }
+
+    template <a_node T>
+    Invert(T&& child, std::string_view name)
+        : Decorator{std::forward<T>(child), name} {
+    }
+
 private:
     [[nodiscard]] State do_tick() final {
         switch (child()->tick()) {
@@ -57,7 +68,13 @@ public:
     }
 
     template <a_node T>
-    Retry(T&& child, int retries, std::string_view name = {})
+    Retry(T&& child, int retries)
+        : Decorator{std::forward<T>(child),
+                    std::format("{} retry", child.name())},
+          retries_{retries} {
+    }
+    template <a_node T>
+    Retry(T&& child, int retries, std::string_view name)
         : Decorator{std::forward<T>(child), name}, retries_{retries} {
     }
 
