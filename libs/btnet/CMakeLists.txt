@@ -3,10 +3,12 @@ add_library(btnet::btnet ALIAS btnet)
 
 target_sources(
     btnet
+    PRIVATE
+        btnet.cpp
     PUBLIC
-    FILE_SET CXX_MODULES
+    FILE_SET HEADERS
     FILES
-        btnet.cppm
+        btnet/btnet.hpp
 )
 
 set_target_properties(
@@ -14,7 +16,6 @@ set_target_properties(
     PROPERTIES
         CXX_STANDARD 23
         CXX_STANDARD_REQUIRED YES
-        CXX_MODULE_STD YES
 )
 
 target_compile_features(
@@ -26,7 +27,6 @@ target_link_libraries(
     btnet
     PUBLIC
         btcpp::btcpp
-    PRIVATE
         cppzmq
 )
 

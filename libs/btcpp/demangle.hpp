@@ -1,5 +1,3 @@
-module;
-
 /*** This part has been extracted from boost/core/demangle.hpp ***/
 
 // __has_include is currently supported by GCC and Clang. However GCC 4.9 may
@@ -31,11 +29,10 @@ module;
 
 /*** original code ***/
 
-export module btcpp:demangle;
+#include <string>
+#include <memory>
 
-import std;
-
-export namespace btcpp {
+namespace btcpp {
 std::string demangle(const char* name) {
 #if defined(HAS_CXXABI_H)
     int status{};

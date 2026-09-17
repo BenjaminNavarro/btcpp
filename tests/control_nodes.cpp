@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
-import btcpp;
-import test_utils;
+#include <btcpp/btcpp.hpp>
+#include "test_utils.hpp"
 
 TEST_CASE("Sequence") {
     SECTION("All success") {

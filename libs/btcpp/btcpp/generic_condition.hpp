@@ -1,13 +1,13 @@
-module;
+#pragma once
+
+#include <btcpp/execution_node.hpp>
 
 #include <cassert>
+#include <type_traits>
+#include <string_view>
+#include <functional>
 
-export module btcpp:generic_condition;
-
-import std;
-import :execution_node;
-
-export namespace btcpp {
+namespace btcpp {
 
 template <typename F>
 concept callable_condition =
@@ -19,7 +19,7 @@ public:
     GenericCondition(T&& condition, std::string_view name = {})
         : Condition{name} {
         if constexpr (std::is_invocable_r_v<bool, T>) {
-            condition_ = [condition] mutable {
+            condition_ = [condition]() mutable {
                 if (condition()) {
                     return State::Success;
                 } else {
@@ -32,14 +32,7 @@ public:
     }
 
 private:
-    [[nodiscard]] State do_tick() final {
-        const auto state = condition_();
-        if (state == State::Running) {
-            throw std::logic_error(
-                "[GenericCondition] conditions cannot be in a 'Running' state");
-        }
-        return state;
-    }
+    [[nodiscard]] State do_tick() final;
 
     std::function<State()> condition_;
 };

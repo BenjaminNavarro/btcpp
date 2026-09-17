@@ -1,13 +1,13 @@
-module;
+#pragma once
+
+#include <btcpp/execution_node.hpp>
 
 #include <cassert>
+#include <functional>
+#include <string_view>
+#include <type_traits>
 
-export module btcpp:generic_action;
-
-import std;
-import :execution_node;
-
-export namespace btcpp {
+namespace btcpp {
 
 template <typename F>
 concept callable_action = std::is_invocable_r_v<State, F>;
@@ -20,9 +20,7 @@ public:
     }
 
 private:
-    [[nodiscard]] State do_tick() final {
-        return action_();
-    }
+    [[nodiscard]] State do_tick() final;
 
     std::function<State()> action_;
 };

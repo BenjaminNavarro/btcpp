@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-import btcpp;
+#include <btcpp/btcpp.hpp>
 
 TEST_CASE("GenericCondition") {
     SECTION("Basic usage") {

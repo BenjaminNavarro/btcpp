@@ -1,29 +1,17 @@
-module;
+#include <btcpp/io.hpp>
+#include <btcpp/fmt.hpp>
+#include "demangle.hpp"
 
 #include <pugixml.hpp>
 
-export module btcpp:io;
+#include <sstream>
+#include <format>
+#include <string_view>
+#include <stdexcept>
 
-import std;
-import :node;
-import :fmt;
-import :demangle;
-import :node_data;
+namespace btcpp {
 
-export namespace btcpp {
-
-enum class XMLFormat { Formatted, Unformatted };
-
-constexpr XMLFormat formatted = XMLFormat::Formatted;
-constexpr XMLFormat unformatted = XMLFormat::Unformatted;
-
-//! \brief Serialize a behavior tree starting at the given node to XML format.
-//!
-//! \param node Root node of the tree
-//! \param formatted [true] Whether to format the XML representation or leave it
-//! raw
-//! \return std::string XML representation of the tree
-std::string to_xml(const Node& node, XMLFormat format = formatted) {
+std::string to_xml(const Node& node, XMLFormat format) {
     pugi::xml_document doc;
 
     // Create a root node in the XML document

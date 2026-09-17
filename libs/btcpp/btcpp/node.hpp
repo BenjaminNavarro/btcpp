@@ -1,8 +1,16 @@
-export module btcpp:node;
+#pragma once
 
-import std;
+#include <cstdint>
+#include <stdexcept>
+#include <string_view>
+#include <string>
+#include <format>
+#include <type_traits>
+#include <memory>
+#include <utility>
+#include <vector>
 
-export namespace btcpp {
+namespace btcpp {
 
 enum class State : std::uint8_t { Success, Failure, Running };
 
@@ -10,23 +18,11 @@ constexpr State success = State::Success;
 constexpr State failure = State::Failure;
 constexpr State running = State::Running;
 
-State from_string(std::string_view state_str) {
-    if (state_str == "success") {
-        return success;
-    } else if (state_str == "failure") {
-        return failure;
-    } else if (state_str == "running") {
-        return running;
-    } else {
-        throw std::invalid_argument{
-            std::format("Invalid state string: {}", state_str)};
-    }
-}
+State from_string(std::string_view state_str);
 
 class Node {
 public:
-    Node(std::string_view name) : name_{name} {
-    }
+    Node(std::string_view name);
 
     Node(const Node&) = delete;
     Node(Node&&) noexcept = default;
@@ -44,10 +40,7 @@ public:
         return name_;
     }
 
-    [[nodiscard]] State tick() {
-        state_ = do_tick();
-        return state_;
-    }
+    [[nodiscard]] State tick();
 
 protected:
     [[nodiscard]] virtual State do_tick() = 0;
@@ -98,17 +91,9 @@ public:
     }
 
 protected:
-    InternalNode(std::string_view name = {}) : Node{name} {
-    }
+    InternalNode(std::string_view name = {});
 
-    InternalNode(int max_children_count, std::string_view name = {})
-        : Node{name}, max_children_count_{max_children_count} {
-        if (max_children_count_ < 0) {
-            throw std::logic_error{
-                std::format("Maximum number of children ({}) can't be negative",
-                            max_children_count_)};
-        }
-    }
+    InternalNode(int max_children_count, std::string_view name = {});
 
 private:
     //! \brief Maximum number of children allowed. Zero means infinite

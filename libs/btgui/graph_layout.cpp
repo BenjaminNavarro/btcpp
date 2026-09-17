@@ -1,11 +1,7 @@
-module;
+#include <btgui/graph_layout.hpp>
 
-#include <QtCore/QPointF>
-
-export module btgui:layout;
-
-import std;
-import btcpp;
+#include <map>
+#include <algorithm>
 
 namespace {
 std::map<int, int> compute_layer_widths(const btcpp::GraphData& bt_data,
@@ -29,29 +25,7 @@ std::map<int, int> compute_layer_widths(const btcpp::GraphData& bt_data,
 }
 } // namespace
 
-export namespace btgui {
-
-struct NodePosition {
-    int x{};
-    int y{};
-};
-
-struct NodeStyle {
-    int width{200};
-    int height{80};
-    int horizontal_margin{50};
-    int vertical_margin{150};
-
-    [[nodiscard]] int horizontal_spacing() const {
-        return width + horizontal_margin;
-    }
-
-    [[nodiscard]] int vertical_spacing() const {
-        return height + vertical_margin;
-    }
-};
-
-using GraphLayout = std::vector<NodePosition>;
+namespace btgui {
 
 GraphLayout compute_graph_layout(const btcpp::GraphData& bt_data,
                                  const NodeStyle& style) {

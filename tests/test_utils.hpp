@@ -1,8 +1,8 @@
-export module test_utils;
+#pragma once
 
-import btcpp;
+#include <btcpp/btcpp.hpp>
 
-export namespace testing {
+namespace testing {
 
 template <btcpp::State S>
 class ActionResult final : public btcpp::ExecutionNode {

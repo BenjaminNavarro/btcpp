@@ -1,9 +1,8 @@
-export module btcpp:decorators;
+#pragma once
 
-import std;
-import :node;
+#include <btcpp/node.hpp>
 
-export namespace btcpp {
+namespace btcpp {
 
 class Decorator : public InternalNode {
 public:
@@ -23,8 +22,7 @@ public:
     }
 
 protected:
-    Decorator(std::string_view name) : InternalNode{1, name} {
-    }
+    Decorator(std::string_view name);
 
     template <a_node T>
     Decorator(T&& child, std::string_view name) : InternalNode{1, name} {
@@ -34,8 +32,7 @@ protected:
 
 class Invert final : public Decorator {
 public:
-    Invert(std::string_view name = {}) : Decorator{name} {
-    }
+    Invert(std::string_view name = {});
 
     template <a_node T>
     Invert(T&& child)
@@ -49,23 +46,12 @@ public:
     }
 
 private:
-    [[nodiscard]] State do_tick() final {
-        switch (child()->tick()) {
-        case success:
-            return failure;
-        case failure:
-            return success;
-        case running:
-            return running;
-        }
-    }
+    [[nodiscard]] State do_tick() final;
 };
 
 class Retry final : public Decorator {
 public:
-    Retry(int retries, std::string_view name = {})
-        : Decorator{name}, retries_{retries} {
-    }
+    Retry(int retries, std::string_view name = {});
 
     template <a_node T>
     Retry(T&& child, int retries)
@@ -91,22 +77,7 @@ public:
     }
 
 private:
-    [[nodiscard]] State do_tick() final {
-        switch (child()->tick()) {
-        case success:
-            reset();
-            return success;
-        case failure:
-            ++failures_count_;
-            if (failures_count_ <= retries_) {
-                return running;
-            } else {
-                return failure;
-            }
-        case running:
-            return running;
-        }
-    }
+    [[nodiscard]] State do_tick() final;
 
     int retries_;
     int failures_count_{};

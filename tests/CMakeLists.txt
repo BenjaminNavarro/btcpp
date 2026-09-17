@@ -5,17 +5,16 @@ add_library(test_utils)
 target_sources(
     test_utils
     PUBLIC
-    FILE_SET CXX_MODULES
+    FILE_SET HEADERS
     FILES
-        tests/test_utils.cppm
+        tests/test_utils.hpp
 )
 
 set_target_properties(
     test_utils
     PROPERTIES
-        CXX_STANDARD 23
+        CXX_STANDARD 17
         CXX_STANDARD_REQUIRED YES
-        CXX_MODULE_STD YES
 )
 
 target_link_libraries(
@@ -26,8 +25,8 @@ target_link_libraries(
 
 target_compile_features(
     test_utils
-    PRIVATE   cxx_std_23
-    INTERFACE cxx_std_20)
+    INTERFACE cxx_std_20
+)
 
 function(add_btcpp_test name)
     if (BUILD_TESTING)
@@ -42,7 +41,7 @@ function(add_btcpp_test name)
         set_target_properties(
             ${name}_test
             PROPERTIES
-                CXX_STANDARD 23
+                CXX_STANDARD 20
                 CXX_STANDARD_REQUIRED YES
         )
 

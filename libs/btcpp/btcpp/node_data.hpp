@@ -1,9 +1,11 @@
-export module btcpp:node_data;
+#pragma once
 
-import std;
-import :node;
+#include <btcpp/node.hpp>
 
-export namespace btcpp {
+#include <string>
+#include <vector>
+
+namespace btcpp {
 
 struct NodeData {
     std::string type;

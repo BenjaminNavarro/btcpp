@@ -1,9 +1,8 @@
-export module btcpp:control_node;
+#pragma once
 
-import std;
-import :node;
+#include <btcpp/node.hpp>
 
-export namespace btcpp {
+namespace btcpp {
 
 class ControlNode : public InternalNode {
 protected:

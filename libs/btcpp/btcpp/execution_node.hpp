@@ -1,9 +1,8 @@
-module;
+#pragma once
 
-export module btcpp:execution_node;
-import :node;
+#include <btcpp/node.hpp>
 
-export namespace btcpp {
+namespace btcpp {
 
 class ExecutionNode : public LeafNode {
 protected:

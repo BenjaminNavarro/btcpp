@@ -11,6 +11,7 @@ set_target_properties(
     PROPERTIES
         CXX_STANDARD 23
         CXX_STANDARD_REQUIRED YES
+        AUTOMOC YES
 )
 
 target_link_libraries(

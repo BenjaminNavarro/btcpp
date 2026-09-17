@@ -1,11 +1,10 @@
+#include <btcpp/btcpp.hpp>
+#include <btgui/btgui.hpp>
+#include <btnet/btnet.hpp>
+
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGraphicsView>
 #include <QtCore/QThread>
-
-import std;
-import btcpp;
-import btgui;
-import btnet;
 
 using namespace std::literals;
 
