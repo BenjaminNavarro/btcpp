@@ -4,7 +4,6 @@ include(CMakeFindDependencyMacro)
 find_dependency(pugixml)
 find_dependency(Qt6)
 find_dependency(cppzmq)
-find_dependency(Sanitizers)
 
 include("${CMAKE_CURRENT_LIST_DIR}/btcppTargets.cmake")
 

@@ -8,8 +8,7 @@ project(
     VERSION 0.1.0
 )
 
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTORCC ON)
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 find_package(pugixml 1.16 REQUIRED)
 find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Widgets)
@@ -28,22 +27,4 @@ if(BUILD_TESTING)
     include(tests/CMakeLists.txt)
 endif()
 
-# install(
-#     TARGETS
-#         btcpp
-#         btgui
-#         btnet
-#         btviewer
-#     EXPORT          btcppTargets
-#     ARCHIVE         DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     LIBRARY         DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     RUNTIME         DESTINATION ${CMAKE_INSTALL_BINDIR}
-#     PUBLIC_HEADER   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/btcpp
-#     FILE_SET        CXX_MODULES DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/btcpp/modules
-# )
-# export(
-#     EXPORT btcppTargets
-#     FILE "${CMAKE_CURRENT_BINARY_DIR}/btcppConfig.cmake"
-#     NAMESPACE btcpp::
-# )
-# include(cmake/generate_install_config.cmake)
+include(cmake/install_targets.cmake)

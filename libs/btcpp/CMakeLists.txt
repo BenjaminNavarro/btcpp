@@ -1,5 +1,4 @@
-add_library(btcpp)
-add_library(btcpp::btcpp ALIAS btcpp)
+btcpp_add_library(btcpp)
 
 target_sources(
     btcpp
@@ -16,6 +15,7 @@ target_sources(
     PUBLIC
     FILE_SET HEADERS
     FILES
+        btcpp/btcpp.hpp
         btcpp/control_node.hpp
         btcpp/decorators.hpp
         btcpp/execution_node.hpp
@@ -30,29 +30,7 @@ target_sources(
         btcpp/sequence.hpp
 )
 
-set_target_properties(
-    btcpp
-    PROPERTIES
-        CXX_STANDARD 23
-        CXX_STANDARD_REQUIRED YES
-)
-
-target_compile_features(
-    btcpp
-    INTERFACE cxx_std_20
-    PRIVATE cxx_std_23
-)
-
 target_link_libraries(
     btcpp
     PRIVATE pugixml::pugixml
-)
-
-add_sanitizers(btcpp)
-
-install(TARGETS btcpp
-        ARCHIVE         DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY         DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        PUBLIC_HEADER   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/btcpp
-        CXX_MODULES_BMI DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/btcpp/modules
 )

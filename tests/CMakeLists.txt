@@ -1,10 +1,10 @@
 include(CTest)
 
-add_library(test_utils)
+add_library(test_utils INTERFACE)
 
 target_sources(
     test_utils
-    PUBLIC
+    INTERFACE
     FILE_SET HEADERS
     FILES
         tests/test_utils.hpp
@@ -19,7 +19,7 @@ set_target_properties(
 
 target_link_libraries(
     test_utils
-    PUBLIC
+    INTERFACE
         btcpp::btcpp
 )
 
@@ -28,7 +28,7 @@ target_compile_features(
     INTERFACE cxx_std_20
 )
 
-function(add_btcpp_test name)
+function(btcpp_add_test name)
     if (BUILD_TESTING)
         add_executable(${name}_test)
 
@@ -58,10 +58,10 @@ function(add_btcpp_test name)
             COMMAND ${name}_test
         )
     endif()
-endfunction(add_btcpp_test)
+endfunction(btcpp_add_test)
 
-add_btcpp_test(conditions)
-add_btcpp_test(actions)
-add_btcpp_test(control_nodes)
-add_btcpp_test(decorators)
-add_btcpp_test(node)
+btcpp_add_test(conditions)
+btcpp_add_test(actions)
+btcpp_add_test(control_nodes)
+btcpp_add_test(decorators)
+btcpp_add_test(node)
